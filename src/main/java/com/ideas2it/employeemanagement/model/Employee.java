@@ -1,8 +1,27 @@
 package com.ideas2it.employeemanagement.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.Period;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents an Employee that can  associated with department & sports.
@@ -10,6 +29,10 @@ import java.time.LocalDate;
  * @author  Kishore
  * @version 1.0
  */
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "employee")
 public class Employee {
@@ -32,5 +55,9 @@ public class Employee {
 
     @Column(name = "isActive")
     private boolean isActive;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
 
 }

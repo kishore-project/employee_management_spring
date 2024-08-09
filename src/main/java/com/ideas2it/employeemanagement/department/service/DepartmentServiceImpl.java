@@ -9,55 +9,60 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ideas2it.employeemanagement.department.mapper.DepartmentMapper.mapToDepartmentDto;
+import static com.ideas2it.employeemanagement.department.mapper.DepartmentMapper.mapToDepartment;
+
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
-
     @Autowired
     private DepartmentRepository departmentRepository;
 
-    // Convert entity to DTO
-    public DepartmentDto convertToDTO(Department department) {
-        return new DepartmentDto(department.getId(), department.getName());
-    }
-
-    // Convert DTO to entity
-    public Department convertToEntity(DepartmentDto departmentDto) {
-        Department department = new Department();
-        department.setId(departmentDto.getId());
-        department.setName(departmentDto.getName());
-        return department;
-    }
-
-    public DepartmentDto addDepartment(DepartmentDto departmentDTO) {
-        Department department = convertToEntity(departmentDTO);
+    @Override
+    public DepartmentDto addDepartment(DepartmentDto departmentDto) {
+        Department department = mapToDepartment(departmentDto);
         Department savedDepartment = departmentRepository.save(department);
-        return convertToDTO(savedDepartment);
+        return mapToDepartmentDto(savedDepartment);
     }
 
+    @Override
     public List<DepartmentDto> getAllDepartments() {
         List<DepartmentDto> result = new ArrayList<>();
         Iterable<Department> departments = departmentRepository.findAll();
         for (Department department : departments) {
-            result.add(convertToDTO(department));
+            if (!department.isDeleted()) {
+                result.add(mapToDepartmentDto(department));
+            }
         }
         return result;
     }
 
+    @Override
     public DepartmentDto getDepartmentById(int id) {
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + id));
-        return convertToDTO(department);
+        if (department.isDeleted()) {
+            throw new IllegalArgumentException("Department is deleted with ID: " + id);
+        }
+        return mapToDepartmentDto(department);
     }
 
-    public DepartmentDto updateDepartment(int id, DepartmentDto departmentDTO) {
+    @Override
+    public DepartmentDto updateDepartment(int id, DepartmentDto departmentDto) {
         Department existingDepartment = departmentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + id));
-        existingDepartment.setName(departmentDTO.getName());
+        if (existingDepartment.isDeleted()) {
+            throw new IllegalArgumentException("Cannot update a deleted department with ID: " + id);
+        }
+        existingDepartment.setName(departmentDto.getName());
         Department updatedDepartment = departmentRepository.save(existingDepartment);
-        return convertToDTO(updatedDepartment);
+        return mapToDepartmentDto(updatedDepartment);
     }
 
+    @Override
     public void deleteDepartment(int id) {
-        departmentRepository.deleteById(id);
+        Department existingDepartment = departmentRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + id));
+        existingDepartment.setDeleted(true);
+        departmentRepository.save(existingDepartment);
     }
 }
