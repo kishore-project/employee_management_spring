@@ -1,17 +1,17 @@
-package com.ideas2it.employeemanagement.department.dto;
+package com.ideas2it.employeemanagement.sport.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
 @Builder
-public class DepartmentDto {
+public class SportDto {
     private int id;
     private String name;
-
 }
-

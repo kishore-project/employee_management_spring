@@ -8,6 +8,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -18,7 +23,12 @@ import java.util.Set;
  * @author  Kishore
  * @version 1.0
  */
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
+@Builder
 @Table(name = "SPORT")
 public class Sport {
     @Id
@@ -33,49 +43,5 @@ public class Sport {
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "sports")
     private Set<Employee> employees = new HashSet<>();
-
-    /**
-     * Constructs a sport with the specified id and name.
-     */
-    public Sport(int id, String name) {
-        this.id = id;
-        this.name = name;
-        this.isActive = true;
-    }
-
-    public Sport() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Set<Employee> getEmployees() {
-        return employees;
-    }
-
-    public boolean getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
-    }
-
-    public void setEmployees(Set<Employee> employees) {
-        this.employees = employees;
-    }
 
 }

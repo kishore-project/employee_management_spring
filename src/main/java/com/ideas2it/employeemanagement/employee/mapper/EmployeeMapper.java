@@ -35,9 +35,9 @@ public class EmployeeMapper {
 
     // Convert DepartmentDto to Department entity
     public static Department mapToDepartment(DepartmentDto departmentDto) {
-        Department department = new Department();
-        department.setId(departmentDto.getId());
-        department.setName(departmentDto.getName());
-        return department;
+        return Department.builder()
+                .id(departmentDto.getId())
+                .name(departmentDto.getName())
+                .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.ideas2it.employeemanagement.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,6 +41,6 @@ public class Department {
     private boolean isDeleted;
 
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @Builder.Default
+    @JsonManagedReference
     private Set<Employee> employees = new HashSet<>();
 }

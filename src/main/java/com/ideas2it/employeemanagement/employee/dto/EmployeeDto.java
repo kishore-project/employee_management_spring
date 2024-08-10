@@ -2,6 +2,7 @@ package com.ideas2it.employeemanagement.employee.dto;
 
 import com.ideas2it.employeemanagement.model.Department;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class EmployeeDto {
     private int id;
     private String name;

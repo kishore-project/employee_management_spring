@@ -99,4 +99,5 @@ public class EmployeeServiceImpl implements EmployeeService {
         existingEmployee.setActive(false);
         employeeRepository.save(existingEmployee);
     }
+
 }

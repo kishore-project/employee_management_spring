@@ -6,7 +6,11 @@ import com.ideas2it.employeemanagement.model.Department;
 public class DepartmentMapper {
     // Convert entity to DTO
     public static DepartmentDto mapToDepartmentDto(Department department) {
-        return new DepartmentDto(department.getId(), department.getName());
+       // return new DepartmentDto(department.getId(), department.getName());
+        return DepartmentDto.builder()
+                .id(department.getId())
+                .name(department.getName())
+                .build();
     }
 
     // Convert DTO to entity

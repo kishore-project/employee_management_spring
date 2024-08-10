@@ -3,6 +3,7 @@ package com.ideas2it.employeemanagement.department.service;
 import com.ideas2it.employeemanagement.department.dto.DepartmentDto;
 import com.ideas2it.employeemanagement.department.dao.DepartmentRepository;
 import com.ideas2it.employeemanagement.model.Department;
+import com.ideas2it.employeemanagement.model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,5 +65,17 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + id));
         existingDepartment.setDeleted(true);
         departmentRepository.save(existingDepartment);
+    }
+    public List<Employee> getEmployeesByDepartmentId(int departmentId) {
+        Department department = departmentRepository.findById(departmentId)
+                .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + departmentId));
+
+        List<Employee> activeEmployees = new ArrayList<>();
+        for (Employee employee : department.getEmployees()) {
+            if (employee.isActive()) {
+                activeEmployees.add(employee);
+            }
+        }
+        return activeEmployees;
     }
 }

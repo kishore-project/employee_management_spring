@@ -2,6 +2,7 @@ package com.ideas2it.employeemanagement.department.controller;
 
 import com.ideas2it.employeemanagement.department.dto.DepartmentDto;
 import com.ideas2it.employeemanagement.department.service.DepartmentService;
+import com.ideas2it.employeemanagement.model.Employee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,5 +44,11 @@ public class DepartmentController {
     public ResponseEntity<DepartmentDto> updateDepartment(@PathVariable int id, @RequestBody DepartmentDto departmentDto) {
         DepartmentDto updatedDepartment = departmentService.updateDepartment(id, departmentDto);
         return new ResponseEntity<>(updatedDepartment, HttpStatus.OK);
+    }
+
+    @GetMapping("/employees/{departmentId}")
+    public ResponseEntity<List<Employee>> getEmployeesByDepartmentId(@PathVariable int departmentId) {
+        List<Employee> employees = departmentService.getEmployeesByDepartmentId(departmentId);
+        return new ResponseEntity<>(employees, HttpStatus.OK);
     }
 }
