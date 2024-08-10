@@ -60,4 +60,11 @@ public class Employee {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "employee_sport",
+            joinColumns = @JoinColumn(name = "Employee_ID"),
+            inverseJoinColumns = @JoinColumn(name = "SPORT_ID"))
+    private Set<Sport> sports = new HashSet<>();
+
 }

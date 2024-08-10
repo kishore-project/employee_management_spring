@@ -16,9 +16,9 @@ public class EmployeeDto {
     private int id;
     private String name;
     private LocalDate dob;
-    private Department department ; // For input
-    //private int departmentName; //for output
     private String emailId;
+    private int departmentID;
+    private String departmentName;
     private String street;
     private String city;
     private String state;

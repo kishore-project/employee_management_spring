@@ -1,11 +1,7 @@
 package com.ideas2it.employeemanagement.employee.controller;
 
-import com.ideas2it.employeemanagement.department.dto.DepartmentDto;
-import com.ideas2it.employeemanagement.department.mapper.DepartmentMapper;
-import com.ideas2it.employeemanagement.department.service.DepartmentService;
 import com.ideas2it.employeemanagement.employee.dto.EmployeeDto;
 import com.ideas2it.employeemanagement.employee.service.EmployeeService;
-import com.ideas2it.employeemanagement.model.Department;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,23 +21,15 @@ import java.util.List;
 public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
-    @Autowired
-    private DepartmentService departmentService;
 
     @PostMapping("/add")
-    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<EmployeeDto> addEmployee(@RequestBody EmployeeDto employeeDto) {
         EmployeeDto createdEmployee = employeeService.addEmployee(employeeDto);
         return new ResponseEntity<>(createdEmployee, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable int id) {
-        employeeService.deleteEmployee(id);
-        return new ResponseEntity<>(HttpStatus.FOUND);
-    }
-
     @GetMapping("/list")
-    public ResponseEntity<List<EmployeeDto>> getAllEmployee() {
+    public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
         List<EmployeeDto> employees = employeeService.getAllEmployees();
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
@@ -56,5 +44,11 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable int id, @RequestBody EmployeeDto employeeDto) {
         EmployeeDto updatedEmployee = employeeService.updateEmployee(id, employeeDto);
         return new ResponseEntity<>(updatedEmployee, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable int id) {
+        employeeService.deleteEmployee(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
