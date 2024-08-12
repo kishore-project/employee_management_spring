@@ -40,10 +40,17 @@ public class DepartmentController {
      */
     @PostMapping("/add")
     public ResponseEntity<DepartmentDto> createDepartment(@Valid @RequestBody DepartmentDto departmentDto) {
-        Department department = DepartmentMapper.mapToDepartment(departmentDto);
-        Department createdDepartment = departmentService.addDepartment(department);
-        DepartmentDto createdDepartmentDto = DepartmentMapper.mapToDepartmentDto(createdDepartment);
-        return new ResponseEntity<>(createdDepartmentDto, HttpStatus.CREATED);
+        logger.info("Creating department with name: {}", departmentDto.getName());
+        try {
+            Department department = DepartmentMapper.mapToDepartment(departmentDto);
+            Department createdDepartment = departmentService.addDepartment(department);
+            DepartmentDto createdDepartmentDto = DepartmentMapper.mapToDepartmentDto(createdDepartment);
+            logger.info("Department created with ID: {}", createdDepartment.getId());
+            return new ResponseEntity<>(createdDepartmentDto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            logger.error("Error creating department", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -54,8 +61,15 @@ public class DepartmentController {
      */
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteDepartment(@PathVariable int id) {
-        departmentService.deleteDepartment(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        logger.info("Deleting department with ID: {}", id);
+        try {
+            departmentService.deleteDepartment(id);
+            logger.info("Department with ID {} deleted successfully", id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            logger.error("Error deleting department with ID: {}", id, e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -65,12 +79,18 @@ public class DepartmentController {
      */
     @GetMapping("/list")
     public ResponseEntity<List<DepartmentDto>> getAllDepartments() {
-        logger.debug("Getting department list");
-        List<Department> departments = departmentService.getAllDepartments();
-        List<DepartmentDto> departmentDtos = departments.stream()
-                .map(DepartmentMapper::mapToDepartmentDto)
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(departmentDtos, HttpStatus.OK);
+        logger.info("Retrieving list of all departments");
+        try {
+            List<Department> departments = departmentService.getAllDepartments();
+            List<DepartmentDto> departmentDtos = departments.stream()
+                    .map(DepartmentMapper::mapToDepartmentDto)
+                    .collect(Collectors.toList());
+            logger.info("Retrieved {} departments", departmentDtos.size());
+            return new ResponseEntity<>(departmentDtos, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Error retrieving departments", e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -81,9 +101,16 @@ public class DepartmentController {
      */
     @GetMapping("/{id}")
     public ResponseEntity<DepartmentDto> getDepartmentById(@PathVariable int id) {
-        Department department = departmentService.getDepartmentById(id);
-        DepartmentDto departmentDto = DepartmentMapper.mapToDepartmentDto(department);
-        return new ResponseEntity<>(departmentDto, HttpStatus.OK);
+        logger.info("Retrieving department with ID: {}", id);
+        try {
+            Department department = departmentService.getDepartmentById(id);
+            DepartmentDto departmentDto = DepartmentMapper.mapToDepartmentDto(department);
+            logger.info("Retrieved department with ID: {}", id);
+            return new ResponseEntity<>(departmentDto, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Error retrieving department with ID: {}", id, e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -95,10 +122,17 @@ public class DepartmentController {
      */
     @PutMapping("/update/{id}")
     public ResponseEntity<DepartmentDto> updateDepartment( @Valid @PathVariable int id, @RequestBody DepartmentDto departmentDto) {
-        Department department = DepartmentMapper.mapToDepartment(departmentDto);
-        Department updatedDepartment = departmentService.updateDepartment(id, department);
-        DepartmentDto updatedDepartmentDto = DepartmentMapper.mapToDepartmentDto(updatedDepartment);
-        return new ResponseEntity<>(updatedDepartmentDto, HttpStatus.OK);
+        logger.info("Updating department with ID: {}", id);
+        try {
+            Department department = DepartmentMapper.mapToDepartment(departmentDto);
+            Department updatedDepartment = departmentService.updateDepartment(id, department);
+            DepartmentDto updatedDepartmentDto = DepartmentMapper.mapToDepartmentDto(updatedDepartment);
+            logger.info("Updated department with ID: {}", id);
+            return new ResponseEntity<>(updatedDepartmentDto, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Error updating department with ID: {}", id, e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -109,12 +143,17 @@ public class DepartmentController {
      */
     @GetMapping("/employees/{departmentId}")
     public ResponseEntity<List<EmployeeDto>>  getEmployeesByDepartmentId(@PathVariable int departmentId) {
-        List<Employee> employees = departmentService.getEmployeesByDepartmentId(departmentId);
-        List<EmployeeDto> employeeDtos = new ArrayList<>();
-        for(Employee employee : employees) {
-            EmployeeDto employeeDto = EmployeeMapper.mapToEmployeeDto(employee);
-            employeeDtos.add(employeeDto);
+        logger.info("Retrieving employees for department with ID: {}", departmentId);
+        try {
+            List<Employee> employees = departmentService.getEmployeesByDepartmentId(departmentId);
+            List<EmployeeDto> employeeDtos = employees.stream()
+                    .map(EmployeeMapper::mapToEmployeeDto)
+                    .collect(Collectors.toList());
+            logger.info("Retrieved {} employees for department with ID: {}", employeeDtos.size(), departmentId);
+            return new ResponseEntity<>(employeeDtos, HttpStatus.OK);
+        } catch (Exception e) {
+            logger.error("Error retrieving employees for department with ID: {}", departmentId, e);
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>(employeeDtos, HttpStatus.OK);
     }
 }

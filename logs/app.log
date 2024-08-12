@@ -5,3 +5,19 @@
 [INFO ] 2024-08-12 19:01:52.578 [main] EmployeemanagementApplication - Started EmployeemanagementApplication in 5.786 seconds (process running for 7.162)
 [INFO ] 2024-08-12 19:01:52.586 [main] EmployeemanagementApplication - Application Started2
 [DEBUG] 2024-08-12 19:02:46.075 [http-nio-8080-exec-4] DepartmentController - Getting department list
+[INFO ] 2024-08-12 22:05:06.383 [main] EmployeemanagementApplication - Starting EmployeemanagementApplication using Java 22.0.2 with PID 2400 (C:\Users\kishorekumar.n\Documents\spring\employeemanagement\target\classes started by kishorekumar.n in C:\Users\kishorekumar.n\Documents\spring\employeemanagement)
+[DEBUG] 2024-08-12 22:05:06.393 [main] EmployeemanagementApplication - Running with Spring Boot v3.3.2, Spring v6.1.11
+[INFO ] 2024-08-12 22:05:06.394 [main] EmployeemanagementApplication - No active profile set, falling back to 1 default profile: "default"
+[INFO ] 2024-08-12 22:05:10.925 [main] EmployeemanagementApplication - Started EmployeemanagementApplication in 5.032 seconds (process running for 6.352)
+[INFO ] 2024-08-12 22:05:10.928 [main] EmployeemanagementApplication - Application Started
+[INFO ] 2024-08-12 22:05:34.140 [http-nio-8080-exec-3] DepartmentController - Retrieving list of all departments
+[INFO ] 2024-08-12 22:05:34.338 [http-nio-8080-exec-3] DepartmentController - Retrieved 7 departments
+[INFO ] 2024-08-12 22:05:48.569 [http-nio-8080-exec-4] SportController - Retrieving list of all sports
+[INFO ] 2024-08-12 22:05:48.586 [http-nio-8080-exec-4] SportController - Retrieved 3 sports
+[INFO ] 2024-08-12 22:09:48.069 [main] EmployeemanagementApplication - Starting EmployeemanagementApplication using Java 22.0.2 with PID 23380 (C:\Users\kishorekumar.n\Documents\spring\employeemanagement\target\classes started by kishorekumar.n in C:\Users\kishorekumar.n\Documents\spring\employeemanagement)
+[DEBUG] 2024-08-12 22:09:48.081 [main] EmployeemanagementApplication - Running with Spring Boot v3.3.2, Spring v6.1.11
+[INFO ] 2024-08-12 22:09:48.082 [main] EmployeemanagementApplication - No active profile set, falling back to 1 default profile: "default"
+[INFO ] 2024-08-12 22:09:52.758 [main] EmployeemanagementApplication - Started EmployeemanagementApplication in 5.186 seconds (process running for 6.509)
+[INFO ] 2024-08-12 22:09:52.762 [main] EmployeemanagementApplication - Application Started
+[INFO ] 2024-08-12 22:10:35.848 [http-nio-8080-exec-4] EmployeeController - Request to retrieve all employees
+[INFO ] 2024-08-12 22:10:36.061 [http-nio-8080-exec-4] EmployeeController - Retrieved 2 employees
