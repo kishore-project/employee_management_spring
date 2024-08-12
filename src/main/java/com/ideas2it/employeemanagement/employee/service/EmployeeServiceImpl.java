@@ -1,21 +1,16 @@
 package com.ideas2it.employeemanagement.employee.service;
 
-import com.ideas2it.employeemanagement.department.dto.DepartmentDto;
 import com.ideas2it.employeemanagement.department.service.DepartmentService;
 import com.ideas2it.employeemanagement.employee.dao.EmployeeRepository;
-import com.ideas2it.employeemanagement.employee.dto.EmployeeDto;
-import com.ideas2it.employeemanagement.employee.mapper.EmployeeMapper;
-import com.ideas2it.employeemanagement.model.Address;
-import com.ideas2it.employeemanagement.model.Department;
 import com.ideas2it.employeemanagement.model.Employee;
+import com.ideas2it.employeemanagement.model.Sport;
+import com.ideas2it.employeemanagement.sport.service.SportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ideas2it.employeemanagement.employee.mapper.EmployeeMapper.mapToEmployee;
-import static com.ideas2it.employeemanagement.employee.mapper.EmployeeMapper.mapToEmployeeDto;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -23,73 +18,48 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeRepository employeeRepository;
 
     @Autowired
-    private DepartmentService departmentService; // Use this for department operations
+    private SportService sportService;
+
+    @Autowired
+    private DepartmentService departmentService;
 
     @Override
-    public EmployeeDto addEmployee(EmployeeDto employeeDto) {
-        // Retrieve Department by ID from the service
-        DepartmentDto departmentDto = departmentService.getDepartmentById(employeeDto.getDepartmentID());
-        Department department = EmployeeMapper.mapToDepartment(departmentDto); // Convert DTO to Entity
-
-        Address address = new Address(employeeDto.getStreet(), employeeDto.getCity(), employeeDto.getState(), employeeDto.getZip());
-
-        // Map DTO to entity
-        Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
-        employee.setDepartment(department);
-        employee.setAddress(address);
-
-        // Save employee
-        Employee savedEmployee = employeeRepository.save(employee);
-        return EmployeeMapper.mapToEmployeeDto(savedEmployee);
+    public Employee addEmployee(Employee employee) {
+        return employeeRepository.save(employee);
     }
 
     @Override
-    public List<EmployeeDto> getAllEmployees() {
-        List<EmployeeDto> result = new ArrayList<>();
-        Iterable<Employee> employees = employeeRepository.findAll();
-        for (Employee employee : employees) {
-            if (employee.isActive()) { //getIsActive()
-                result.add(EmployeeMapper.mapToEmployeeDto(employee));
+    public List<Employee> getAllEmployees() {
+        List<Employee> allEmployees = (List<Employee>) employeeRepository.findAll();
+        List<Employee> activeEmployees = new ArrayList<>();
+
+        for (Employee employee : allEmployees) {
+            if (employee.isActive()) {
+                activeEmployees.add(employee);
             }
         }
-        return result;
+
+        return activeEmployees;
     }
 
     @Override
-    public EmployeeDto getEmployeeById(int id) {
+    public Employee getEmployeeById(int id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found with ID: " + id));
         if (!employee.isActive()) {
             throw new IllegalArgumentException("Employee is inactive with ID: " + id);
         }
-        return EmployeeMapper.mapToEmployeeDto(employee);
+        return employee;
     }
 
     @Override
-    public EmployeeDto updateEmployee(int id, EmployeeDto employeeDto) {
-        Employee existingEmployee = employeeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Employee not found with ID: " + id));
+    public Employee updateEmployee(Employee employee) {
+        Employee existingEmployee = employeeRepository.findById(employee.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Employee not found with ID: " + employee.getId()));
         if (!existingEmployee.isActive()) {
-            throw new IllegalArgumentException("Cannot update an inactive employee with ID: " + id);
+            throw new IllegalArgumentException("Cannot update an inactive employee with ID: " + employee.getId());
         }
-
-        // Update existing employee fields
-        existingEmployee.setName(employeeDto.getName());
-        existingEmployee.setDob(employeeDto.getDob());
-        existingEmployee.setEmailId(employeeDto.getEmailId());
-
-        // Retrieve Department by ID from the service
-        DepartmentDto departmentDto = departmentService.getDepartmentById(employeeDto.getDepartmentID());
-        Department department = EmployeeMapper.mapToDepartment(departmentDto); // Convert DTO to Entity
-
-        Address address = new Address(employeeDto.getStreet(), employeeDto.getCity(), employeeDto.getState(), employeeDto.getZip());
-
-        existingEmployee.setDepartment(department);
-        existingEmployee.setAddress(address);
-
-        // Save updated employee
-        Employee updatedEmployee = employeeRepository.save(existingEmployee);
-        return EmployeeMapper.mapToEmployeeDto(updatedEmployee);
+        return employeeRepository.save(employee);
     }
 
     @Override
@@ -100,4 +70,21 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepository.save(existingEmployee);
     }
 
+    @Override
+    public Employee addSportToEmployee(int employeeId, Sport sport) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("Employee not found with ID: " + employeeId));
+
+        employee.getSports().add(sport);
+        return employeeRepository.save(employee);
+    }
+
+    @Override
+    public Employee removeSportFromEmployee(int employeeId, Sport sport) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("Employee not found with ID: " + employeeId));
+
+        employee.getSports().remove(sport);
+        return employeeRepository.save(employee);
+    }
 }

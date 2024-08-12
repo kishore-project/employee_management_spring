@@ -18,8 +18,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Represnts a sport that can be associated with employees.
- * A sport has a unique Identifier, a name and a list of employees who participate in it.
+ * Represents an Sport that can  associated with employee.
+ * Contains details like id, name, active status and associated employee.
  * @author  Kishore
  * @version 1.0
  */

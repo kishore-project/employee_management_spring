@@ -1,7 +1,7 @@
 package com.ideas2it.employeemanagement.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -29,7 +28,6 @@ import java.util.Set;
  * Represents an Employee that can  associated with department & sports.
  * Contains details like id, name, date of birth (dob), department, email, active status and associated sports.
  * @author  Kishore
- * @version 1.0
  */
 @Getter
 @Setter
@@ -62,7 +60,7 @@ public class Employee {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
-
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "employee_sport",

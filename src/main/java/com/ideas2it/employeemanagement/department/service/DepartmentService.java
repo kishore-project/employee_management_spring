@@ -10,13 +10,50 @@ import java.util.List;
 
 @Component
 public interface DepartmentService {
-    DepartmentDto addDepartment(DepartmentDto departmentDTO);
+
+    /**
+     * Adds a new department to the Database.
+     *
+     * @param department the department entity to be added
+     * @return the saved department entity.
+     */
+    Department addDepartment(Department department);
+
+    /**
+     * Retrieves all active department.
+     *
+     * @return a list of active department entities
+     */
+    List<Department> getAllDepartments();
+
+    /**
+     * Retrieves an departemnt by their ID.
+     *
+     * @param id the ID of the department to be retrieved
+     * @return the employee entity with the specified ID
+     */
+    Department getDepartmentById(int id);
+
+    /**
+     * Updates an existing department.
+     *
+     * @param department the department entity with updated information
+     * @return the updated department entity
+     */
+    Department updateDepartment(int id, Department department);
+
+    /**
+     * Soft deletes an department by setting them as inactive.
+     *
+     * @param id the ID of the sport to be deleted
+     */
     void deleteDepartment(int id);
-    List<DepartmentDto> getAllDepartments() ;
-    DepartmentDto getDepartmentById(int id);
-    DepartmentDto updateDepartment(int id, DepartmentDto departmentDTO);
+
+    /**
+     * Retrieves all active employee By department ID.
+     *
+     * @return a list of active employee entities
+     */
     List<Employee> getEmployeesByDepartmentId(int departmentId);
-
-
-
 }
+

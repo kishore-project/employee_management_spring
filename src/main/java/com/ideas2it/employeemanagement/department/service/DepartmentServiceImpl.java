@@ -19,44 +19,41 @@ public class DepartmentServiceImpl implements DepartmentService {
     private DepartmentRepository departmentRepository;
 
     @Override
-    public DepartmentDto addDepartment(DepartmentDto departmentDto) {
-        Department department = mapToDepartment(departmentDto);
-        Department savedDepartment = departmentRepository.save(department);
-        return mapToDepartmentDto(savedDepartment);
+    public Department addDepartment(Department department) {
+        return departmentRepository.save(department);
     }
 
     @Override
-    public List<DepartmentDto> getAllDepartments() {
-        List<DepartmentDto> result = new ArrayList<>();
+    public List<Department> getAllDepartments() {
+        List<Department> result = new ArrayList<>();
         Iterable<Department> departments = departmentRepository.findAll();
         for (Department department : departments) {
             if (!department.isDeleted()) {
-                result.add(mapToDepartmentDto(department));
+                result.add(department);
             }
         }
         return result;
     }
 
     @Override
-    public DepartmentDto getDepartmentById(int id) {
+    public Department getDepartmentById(int id) {
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + id));
         if (department.isDeleted()) {
             throw new IllegalArgumentException("Department is deleted with ID: " + id);
         }
-        return mapToDepartmentDto(department);
+        return department;
     }
 
     @Override
-    public DepartmentDto updateDepartment(int id, DepartmentDto departmentDto) {
+    public Department updateDepartment(int id, Department department) {
         Department existingDepartment = departmentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + id));
         if (existingDepartment.isDeleted()) {
             throw new IllegalArgumentException("Cannot update a deleted department with ID: " + id);
         }
-        existingDepartment.setName(departmentDto.getName());
-        Department updatedDepartment = departmentRepository.save(existingDepartment);
-        return mapToDepartmentDto(updatedDepartment);
+        existingDepartment.setName(department.getName());
+        return departmentRepository.save(existingDepartment);
     }
 
     @Override
@@ -66,6 +63,8 @@ public class DepartmentServiceImpl implements DepartmentService {
         existingDepartment.setDeleted(true);
         departmentRepository.save(existingDepartment);
     }
+
+    @Override
     public List<Employee> getEmployeesByDepartmentId(int departmentId) {
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + departmentId));

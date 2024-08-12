@@ -12,10 +12,9 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 /**
- * Represents an Address that can be associated with employee.
- * Contains details like id, Street Name, City , State, ZipCode.
- * @author Kishore
- * @version 1.0
+ * Represents an Address that can  associated with employee.
+ * Contains details like id, street, city, state, zipcode and associated employee.
+ * @author  Kishore
  */
 @Entity
 @Table(name = "address")
