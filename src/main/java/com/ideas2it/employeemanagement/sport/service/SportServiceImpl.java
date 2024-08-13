@@ -1,61 +1,70 @@
 package com.ideas2it.employeemanagement.sport.service;
 
+import com.ideas2it.employeemanagement.employee.dto.EmployeeDto;
+import com.ideas2it.employeemanagement.employee.mapper.EmployeeMapper;
 import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.Sport;
 import com.ideas2it.employeemanagement.sport.dao.SportRepository;
 import com.ideas2it.employeemanagement.sport.dto.SportDto;
 import com.ideas2it.employeemanagement.sport.mapper.SportMapper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static com.ideas2it.employeemanagement.sport.mapper.SportMapper.mapToSport;
-import static com.ideas2it.employeemanagement.sport.mapper.SportMapper.mapToSportDto;
 
 @Service
 public class SportServiceImpl implements SportService {
     @Autowired
     private SportRepository sportRepository;
 
-    @Override
-    public Sport addSport(Sport sport) {
-        return sportRepository.save(sport);
-    }
+    private static final Logger logger = LogManager.getLogger(SportServiceImpl.class);
 
     @Override
-    public List<Sport> getAllSports() {
-        List<Sport> result = new ArrayList<>();
+    public SportDto addSport(SportDto sportDto) {
+        Sport sport = SportMapper.mapToSport(sportDto);
+        Sport createdSport = sportRepository.save(sport);
+        logger.info("Adding sport with name: {}",sportDto.getName());
+        return SportMapper.mapToSportDto(createdSport);
+    }
+    @Override
+    public List<SportDto> getAllSports() {
         Iterable<Sport> sports = sportRepository.findAll();
+        List<SportDto> sportDtos = new ArrayList<>();
         for (Sport sport : sports) {
             if (sport.isActive()) {
-                result.add(sport);
+                sportDtos.add(SportMapper.mapToSportDto(sport));
             }
         }
-        return result;
+        logger.info("Retrieving list of all sports");
+        return sportDtos;
     }
 
     @Override
-    public Sport getSportById(int id) {
+    public SportDto getSportById(int id) {
         Sport sport = sportRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Sport not found with ID: " + id));
-        if (sport.isActive()) {
+        if (!sport.isActive()) {
+            logger.error("Sport is deleted with ID: {}", id);
             throw new IllegalArgumentException("Sport is deleted with ID: " + id);
         }
-        return sport;
+        return SportMapper.mapToSportDto(sport);
     }
 
     @Override
-    public Sport updateSport(int id, Sport sport) {
+    public SportDto updateSport(int id, SportDto sportDto) {
         Sport existingSport = sportRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Sport not found with ID: " + id));
-        if (existingSport.isActive()) {
+        if (!existingSport.isActive()) {
+            logger.error("Cannot update a deleted sport with ID: {}", id);
             throw new IllegalArgumentException("Cannot update a deleted sport with ID: " + id);
         }
-        existingSport.setName(sport.getName());
-        return sportRepository.save(existingSport);
+        existingSport.setName(sportDto.getName());
+        Sport updatedSport = sportRepository.save(existingSport);
+        logger.info("Updated sport with name {}",sportDto.getName());
+        return SportMapper.mapToSportDto(updatedSport);
     }
 
     @Override
@@ -64,19 +73,21 @@ public class SportServiceImpl implements SportService {
                 .orElseThrow(() -> new IllegalArgumentException("Sport not found with ID: " + id));
         existingSport.setActive(false);
         sportRepository.save(existingSport);
+        logger.info("Department is Deleted {}",existingSport.getName());
     }
 
     @Override
-    public List<Employee> getEmployeesBySportId(int sportId) {
+    public List<EmployeeDto> getEmployeesBySportId(int sportId) {
         Sport sport = sportRepository.findById(sportId)
                 .orElseThrow(() -> new IllegalArgumentException("Sport not found with ID: " + sportId));
 
-        List<Employee> activeEmployees = new ArrayList<>();
+        List<EmployeeDto> employeeDtos = new ArrayList<>();
         for (Employee employee : sport.getEmployees()) {
             if (employee.isActive()) {
-                activeEmployees.add(employee);
+                employeeDtos.add(EmployeeMapper.mapToEmployeeDto(employee));
             }
         }
-        return activeEmployees;
+        logger.info("Retrieving list of all Employee in Sport {}",sport.getName());
+        return employeeDtos;
     }
 }

@@ -1,12 +1,8 @@
 package com.ideas2it.employeemanagement.department.controller;
 
 import com.ideas2it.employeemanagement.department.dto.DepartmentDto;
-import com.ideas2it.employeemanagement.department.mapper.DepartmentMapper;
 import com.ideas2it.employeemanagement.department.service.DepartmentService;
 import com.ideas2it.employeemanagement.employee.dto.EmployeeDto;
-import com.ideas2it.employeemanagement.employee.mapper.EmployeeMapper;
-import com.ideas2it.employeemanagement.model.Department;
-import com.ideas2it.employeemanagement.model.Employee;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,9 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * REST controller for managing Department entities.
@@ -25,7 +19,7 @@ import java.util.stream.Collectors;
  * and manage their associated employee.
  */
 @RestController
-@RequestMapping("api/v1/department")
+@RequestMapping("api/v1/departments")
 public class DepartmentController {
     @Autowired
     private  DepartmentService departmentService;
@@ -38,14 +32,12 @@ public class DepartmentController {
      * @param departmentDto {@link DepartmentDto}The DTO containing department data.
      * @return The created department DTO with HTTP status 201 Created.
      */
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<DepartmentDto> createDepartment(@Valid @RequestBody DepartmentDto departmentDto) {
         logger.info("Creating department with name: {}", departmentDto.getName());
         try {
-            Department department = DepartmentMapper.mapToDepartment(departmentDto);
-            Department createdDepartment = departmentService.addDepartment(department);
-            DepartmentDto createdDepartmentDto = DepartmentMapper.mapToDepartmentDto(createdDepartment);
-            logger.info("Department created with ID: {}", createdDepartment.getId());
+            DepartmentDto createdDepartmentDto = departmentService.addDepartment(departmentDto);
+            logger.info("Department created with ID: {}", createdDepartmentDto.getId());
             return new ResponseEntity<>(createdDepartmentDto, HttpStatus.CREATED);
         } catch (Exception e) {
             logger.error("Error creating department", e);
@@ -54,7 +46,7 @@ public class DepartmentController {
     }
 
     /**
-     * Deletes an department by ID.
+     * Deletes a department by ID.
      *
      * @param id The ID of the department to be deleted.
      * @return HTTP status 204 No Content.
@@ -81,10 +73,7 @@ public class DepartmentController {
     public ResponseEntity<List<DepartmentDto>> getAllDepartments() {
         logger.info("Retrieving list of all departments");
         try {
-            List<Department> departments = departmentService.getAllDepartments();
-            List<DepartmentDto> departmentDtos = departments.stream()
-                    .map(DepartmentMapper::mapToDepartmentDto)
-                    .collect(Collectors.toList());
+            List<DepartmentDto> departmentDtos = departmentService.getAllDepartments();
             logger.info("Retrieved {} departments", departmentDtos.size());
             return new ResponseEntity<>(departmentDtos, HttpStatus.OK);
         } catch (Exception e) {
@@ -94,7 +83,7 @@ public class DepartmentController {
     }
 
     /**
-     * Retrieves an department by ID.
+     * Retrieves a department by ID.
      *
      * @param id The ID of the department.
      * @return The department DTO with HTTP status 200 OK.
@@ -103,8 +92,7 @@ public class DepartmentController {
     public ResponseEntity<DepartmentDto> getDepartmentById(@PathVariable int id) {
         logger.info("Retrieving department with ID: {}", id);
         try {
-            Department department = departmentService.getDepartmentById(id);
-            DepartmentDto departmentDto = DepartmentMapper.mapToDepartmentDto(department);
+            DepartmentDto departmentDto = departmentService.getDepartmentById(id);
             logger.info("Retrieved department with ID: {}", id);
             return new ResponseEntity<>(departmentDto, HttpStatus.OK);
         } catch (Exception e) {
@@ -121,12 +109,10 @@ public class DepartmentController {
      * @return The updated department DTO with HTTP status 200 OK.
      */
     @PutMapping("/update/{id}")
-    public ResponseEntity<DepartmentDto> updateDepartment( @Valid @PathVariable int id, @RequestBody DepartmentDto departmentDto) {
+    public ResponseEntity<DepartmentDto> updateDepartment(@Valid @PathVariable int id, @RequestBody DepartmentDto departmentDto) {
         logger.info("Updating department with ID: {}", id);
         try {
-            Department department = DepartmentMapper.mapToDepartment(departmentDto);
-            Department updatedDepartment = departmentService.updateDepartment(id, department);
-            DepartmentDto updatedDepartmentDto = DepartmentMapper.mapToDepartmentDto(updatedDepartment);
+            DepartmentDto updatedDepartmentDto = departmentService.updateDepartment(id, departmentDto);
             logger.info("Updated department with ID: {}", id);
             return new ResponseEntity<>(updatedDepartmentDto, HttpStatus.OK);
         } catch (Exception e) {
@@ -136,19 +122,16 @@ public class DepartmentController {
     }
 
     /**
-     * Getting  employee List by Department Id.
+     * Getting  employee List by DepartmentId.
      *
      * @param departmentId The ID of the department.
-     * @return The EmployeeDto List by department Id with HTTP status 200 OK.
+     * @return The EmployeeDto List by departmentId with HTTP status 200 OK.
      */
     @GetMapping("/employees/{departmentId}")
-    public ResponseEntity<List<EmployeeDto>>  getEmployeesByDepartmentId(@PathVariable int departmentId) {
+    public ResponseEntity<List<EmployeeDto>> getEmployeesByDepartmentId(@PathVariable int departmentId) {
         logger.info("Retrieving employees for department with ID: {}", departmentId);
         try {
-            List<Employee> employees = departmentService.getEmployeesByDepartmentId(departmentId);
-            List<EmployeeDto> employeeDtos = employees.stream()
-                    .map(EmployeeMapper::mapToEmployeeDto)
-                    .collect(Collectors.toList());
+            List<EmployeeDto> employeeDtos = departmentService.getEmployeesByDepartmentId(departmentId);
             logger.info("Retrieved {} employees for department with ID: {}", employeeDtos.size(), departmentId);
             return new ResponseEntity<>(employeeDtos, HttpStatus.OK);
         } catch (Exception e) {

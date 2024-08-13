@@ -2,58 +2,75 @@ package com.ideas2it.employeemanagement.department.service;
 
 import com.ideas2it.employeemanagement.department.dto.DepartmentDto;
 import com.ideas2it.employeemanagement.department.dao.DepartmentRepository;
+import com.ideas2it.employeemanagement.department.mapper.DepartmentMapper;
+import com.ideas2it.employeemanagement.employee.dto.EmployeeDto;
+import com.ideas2it.employeemanagement.employee.mapper.EmployeeMapper;
 import com.ideas2it.employeemanagement.model.Department;
 import com.ideas2it.employeemanagement.model.Employee;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ideas2it.employeemanagement.department.mapper.DepartmentMapper.mapToDepartmentDto;
-import static com.ideas2it.employeemanagement.department.mapper.DepartmentMapper.mapToDepartment;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
     @Autowired
     private DepartmentRepository departmentRepository;
 
+    private static final Logger logger = LogManager.getLogger(DepartmentServiceImpl.class);
+
     @Override
-    public Department addDepartment(Department department) {
-        return departmentRepository.save(department);
+    public DepartmentDto addDepartment(DepartmentDto departmentDto) {
+        Department department = DepartmentMapper.mapToDepartment(departmentDto);
+        Department createdDepartment = departmentRepository.save(department);
+        logger.info("Adding department with name: {}",departmentDto.getName());
+        return DepartmentMapper.mapToDepartmentDto(createdDepartment);
     }
 
     @Override
-    public List<Department> getAllDepartments() {
-        List<Department> result = new ArrayList<>();
-        Iterable<Department> departments = departmentRepository.findAll();
-        for (Department department : departments) {
+    public List<DepartmentDto> getAllDepartments() {
+        List<Department> departments = new ArrayList<>();
+        Iterable<Department> allDepartments = departmentRepository.findAll();
+        for (Department department : allDepartments) {
             if (!department.isDeleted()) {
-                result.add(department);
+                departments.add(department);
             }
         }
-        return result;
+        List<DepartmentDto> departmentDtos = new ArrayList<>();
+        for (Department department : departments) {
+            departmentDtos.add(DepartmentMapper.mapToDepartmentDto(department));
+        }
+        logger.info("Retrieving list of all departments");
+        return departmentDtos;
     }
 
     @Override
-    public Department getDepartmentById(int id) {
+    public DepartmentDto getDepartmentById(int id) {
         Department department = departmentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + id));
         if (department.isDeleted()) {
+            logger.error("Department is deleted with ID: " + id);
             throw new IllegalArgumentException("Department is deleted with ID: " + id);
         }
-        return department;
+        return DepartmentMapper.mapToDepartmentDto(department);
     }
 
     @Override
-    public Department updateDepartment(int id, Department department) {
+    public DepartmentDto updateDepartment(int id, DepartmentDto departmentDto) {
         Department existingDepartment = departmentRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + id));
         if (existingDepartment.isDeleted()) {
+            logger.error("Cannot update a deleted department with ID: " + id);
             throw new IllegalArgumentException("Cannot update a deleted department with ID: " + id);
         }
-        existingDepartment.setName(department.getName());
-        return departmentRepository.save(existingDepartment);
+        existingDepartment.setName(departmentDto.getName());
+        Department updatedDepartment = departmentRepository.save(existingDepartment);
+        logger.info("Updated department with name {}",departmentDto.getName());
+        return DepartmentMapper.mapToDepartmentDto(updatedDepartment);
     }
 
     @Override
@@ -62,10 +79,11 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + id));
         existingDepartment.setDeleted(true);
         departmentRepository.save(existingDepartment);
+        logger.info("Department is Deleted {}",existingDepartment.getName());
     }
 
     @Override
-    public List<Employee> getEmployeesByDepartmentId(int departmentId) {
+    public List<EmployeeDto> getEmployeesByDepartmentId(int departmentId) {
         Department department = departmentRepository.findById(departmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Department not found with ID: " + departmentId));
 
@@ -75,6 +93,11 @@ public class DepartmentServiceImpl implements DepartmentService {
                 activeEmployees.add(employee);
             }
         }
-        return activeEmployees;
+        List<EmployeeDto> employeeDtos = new ArrayList<>();
+        for (Employee employee : activeEmployees) {
+            employeeDtos.add(EmployeeMapper.mapToEmployeeDto(employee));
+        }
+        logger.info("Retrieving list of Employee in Department{}",employeeDtos.size());
+        return employeeDtos;
     }
 }

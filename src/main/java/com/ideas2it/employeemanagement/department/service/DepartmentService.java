@@ -1,6 +1,7 @@
 package com.ideas2it.employeemanagement.department.service;
 
 import com.ideas2it.employeemanagement.department.dto.DepartmentDto;
+import com.ideas2it.employeemanagement.employee.dto.EmployeeDto;
 import com.ideas2it.employeemanagement.model.Department;
 import com.ideas2it.employeemanagement.model.Employee;
 import org.springframework.stereotype.Component;
@@ -14,17 +15,17 @@ public interface DepartmentService {
     /**
      * Adds a new department to the Database.
      *
-     * @param department the department entity to be added
+     * @param departmentDto {@link DepartmentDto} the department entity to be added
      * @return the saved department entity.
      */
-    Department addDepartment(Department department);
+    DepartmentDto addDepartment(DepartmentDto departmentDto);
 
     /**
      * Retrieves all active department.
      *
      * @return a list of active department entities
      */
-    List<Department> getAllDepartments();
+    List<DepartmentDto> getAllDepartments();
 
     /**
      * Retrieves an departemnt by their ID.
@@ -32,28 +33,28 @@ public interface DepartmentService {
      * @param id the ID of the department to be retrieved
      * @return the employee entity with the specified ID
      */
-    Department getDepartmentById(int id);
+    DepartmentDto getDepartmentById(int id);
 
     /**
      * Updates an existing department.
      *
-     * @param department the department entity with updated information
+     * @param departmentdto {@link DepartmentDto} the department entity with updated information
      * @return the updated department entity
      */
-    Department updateDepartment(int id, Department department);
+    DepartmentDto updateDepartment(int id, DepartmentDto departmentdto);
 
     /**
-     * Soft deletes an department by setting them as inactive.
+     * Soft deletes a department by setting them as inactive.
      *
      * @param id the ID of the sport to be deleted
      */
-    void deleteDepartment(int id);
+    void deleteDepartment(int id) ;
 
     /**
      * Retrieves all active employee By department ID.
      *
      * @return a list of active employee entities
      */
-    List<Employee> getEmployeesByDepartmentId(int departmentId);
+    List<EmployeeDto> getEmployeesByDepartmentId(int departmentId);
 }
 

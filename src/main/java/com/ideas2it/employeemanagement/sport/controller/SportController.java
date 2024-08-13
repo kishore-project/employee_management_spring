@@ -24,7 +24,7 @@ import java.util.List;
  * and manage their associated employees.
  */
 @RestController
-@RequestMapping("api/v1/sport")
+@RequestMapping("api/v1/sports")
 public class SportController {
     @Autowired
     private SportService sportService;
@@ -34,17 +34,15 @@ public class SportController {
     /**
      * Creates a new sport.
      *
-     * @param sportDto The DTO containing sport data.
+     * @param sportDto {@link SportDto} The DTO containing sport data.
      * @return The created sport DTO with HTTP status 201 Created.
      */
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<SportDto> createSport(@Valid @RequestBody SportDto sportDto) {
         logger.info("Request to create sport with name: {}", sportDto.getName());
         try {
-            Sport sport = SportMapper.mapToSport(sportDto);
-            Sport createdSport = sportService.addSport(sport);
-            SportDto createdSportDto = SportMapper.mapToSportDto(createdSport);
-            logger.info("Sport created with ID: {}", createdSport.getId());
+            SportDto createdSportDto = sportService.addSport(sportDto);
+            logger.info("Sport created with ID: {}", createdSportDto.getId());
             return new ResponseEntity<>(createdSportDto, HttpStatus.CREATED);
         } catch (Exception e) {
             logger.error("Error creating sport", e);
@@ -80,12 +78,7 @@ public class SportController {
     public ResponseEntity<List<SportDto>> getAllSports() {
         logger.info("Retrieving list of all sports");
         try {
-            List<Sport> sports = sportService.getAllSports();
-            List<SportDto> sportDtos = new ArrayList<>();
-            for (Sport sport : sports) {
-                SportDto sportDto = SportMapper.mapToSportDto(sport);
-                sportDtos.add(sportDto);
-            }
+            List<SportDto> sportDtos = sportService.getAllSports();
             logger.info("Retrieved {} sports", sportDtos.size());
             return new ResponseEntity<>(sportDtos, HttpStatus.OK);
         } catch (Exception e) {
@@ -104,8 +97,7 @@ public class SportController {
     public ResponseEntity<SportDto> getSportById(@PathVariable int id) {
         logger.info("Request to retrieve sport with ID: {}", id);
         try {
-            Sport sport = sportService.getSportById(id);
-            SportDto sportDto = SportMapper.mapToSportDto(sport);
+            SportDto sportDto = sportService.getSportById(id);
             logger.info("Retrieved sport with ID: {}", id);
             return new ResponseEntity<>(sportDto, HttpStatus.OK);
         } catch (Exception e) {
@@ -118,16 +110,14 @@ public class SportController {
      * Updates an existing sport.
      *
      * @param id The ID of the sport to be updated.
-     * @param sportDto The DTO containing updated sport data.
+     * @param sportDto {@link SportDto}The DTO containing updated sport data.
      * @return The updated sport DTO with HTTP status 200 OK.
      */
     @PutMapping("/update/{id}")
     public ResponseEntity<SportDto> updateSport(@Valid @PathVariable int id, @RequestBody SportDto sportDto) {
         logger.info("Request to update sport with ID: {}", id);
         try {
-            Sport sport = SportMapper.mapToSport(sportDto);
-            Sport updatedSport = sportService.updateSport(id, sport);
-            SportDto updatedSportDto = SportMapper.mapToSportDto(updatedSport);
+            SportDto updatedSportDto = sportService.updateSport(id, sportDto);
             logger.info("Updated sport with ID: {}", id);
             return new ResponseEntity<>(updatedSportDto, HttpStatus.OK);
         } catch (Exception e) {
@@ -146,12 +136,7 @@ public class SportController {
     public ResponseEntity<List<EmployeeDto>> getEmployeesBySportId(@PathVariable int sportId) {
         logger.info("Request to retrieve employees for sport with ID: {}", sportId);
         try {
-            List<Employee> employees = sportService.getEmployeesBySportId(sportId);
-            List<EmployeeDto> employeeDtos = new ArrayList<>();
-            for (Employee employee : employees) {
-                EmployeeDto employeeDto = EmployeeMapper.mapToEmployeeDto(employee);
-                employeeDtos.add(employeeDto);
-            }
+            List<EmployeeDto> employeeDtos = sportService.getEmployeesBySportId(sportId);
             logger.info("Retrieved {} employees for sport with ID: {}", employeeDtos.size(), sportId);
             return new ResponseEntity<>(employeeDtos, HttpStatus.OK);
         } catch (Exception e) {

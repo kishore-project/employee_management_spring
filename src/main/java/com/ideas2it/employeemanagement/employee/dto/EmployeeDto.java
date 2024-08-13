@@ -39,7 +39,7 @@ public class EmployeeDto {
     private int age;
 
     @NotBlank(message = "Email ID is Required")
-    @Email(regexp = "\\\\b[A-za-z0-9._%-]+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,4}\\\\b")
+    @Email
     private String emailId;
 
     @NotNull(message = "Department ID is Required")

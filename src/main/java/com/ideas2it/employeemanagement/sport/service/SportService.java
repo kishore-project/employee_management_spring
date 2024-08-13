@@ -1,6 +1,7 @@
 package com.ideas2it.employeemanagement.sport.service;
 
 import com.ideas2it.employeemanagement.department.dto.DepartmentDto;
+import com.ideas2it.employeemanagement.employee.dto.EmployeeDto;
 import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.Sport;
 import com.ideas2it.employeemanagement.sport.dto.SportDto;
@@ -14,17 +15,17 @@ public interface SportService {
     /**
      * Adds a new sport to the Database.
      *
-     * @param sport the sport entity to be added
+     * @param sportDto {@link SportDto} the sport entity to be added
      * @return the saved sport entity.
      */
-    Sport addSport(Sport sport);
+    SportDto addSport(SportDto sportDto);
 
     /**
      * Retrieves all active sport.
      *
      * @return a list of active sport entities
      */
-    List<Sport> getAllSports();
+    List<SportDto> getAllSports();
 
     /**
      * Retrieves a sport by their ID.
@@ -32,15 +33,15 @@ public interface SportService {
      * @param id the ID of the sport to be retrieved
      * @return the sport entity with the specified ID
      */
-    Sport getSportById(int id);
+    SportDto getSportById(int id);
 
     /**
      * Updates an existing sport.
      *
-     * @param sport the sport entity with updated information
+     * @param sportDto {@link SportDto} the sport entity with updated information
      * @return the updated sport entity
      */
-    Sport updateSport(int id, Sport sport);
+    SportDto updateSport(int id, SportDto sportDto);
 
     /**
      * Soft deletes a sport by setting them as inactive.
@@ -53,5 +54,5 @@ public interface SportService {
      *
      * @return a list of active employee entities
      */
-    List<Employee> getEmployeesBySportId(int sportId);
+    List<EmployeeDto> getEmployeesBySportId(int sportId);
 }

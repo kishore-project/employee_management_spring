@@ -1,5 +1,6 @@
 package com.ideas2it.employeemanagement.employee.service;
 
+import com.ideas2it.employeemanagement.employee.dto.EmployeeDto;
 import com.ideas2it.employeemanagement.model.Employee;
 import com.ideas2it.employeemanagement.model.Sport;
 import org.springframework.stereotype.Component;
@@ -12,17 +13,17 @@ public interface EmployeeService {
     /**
      * Adds a new employee to the system.
      *
-     * @param employee the employee entity to be added
+     * @param employeeDto {@link EmployeeDto} the employee entity to be added
      * @return the saved employee entity
      */
-    Employee addEmployee(Employee employee);
+    EmployeeDto addEmployee(EmployeeDto employeeDto);
 
     /**
      * Retrieves all active employees.
      *
      * @return a list of active employee entities
      */
-    List<Employee> getAllEmployees();
+    List<EmployeeDto> getAllEmployees();
 
     /**
      * Retrieves an employee by their ID.
@@ -30,15 +31,15 @@ public interface EmployeeService {
      * @param id the ID of the employee to be retrieved
      * @return the employee entity with the specified ID
      */
-    Employee getEmployeeById(int id);
+    EmployeeDto getEmployeeById(int id) ;
 
     /**
      * Updates an existing employee.
      *
-     * @param employee the employee entity with updated information
+     * @param employeeDto {@link EmployeeDto} the employee entity with updated information
      * @return the updated employee entity
      */
-    Employee updateEmployee(Employee employee);
+    EmployeeDto updateEmployee(int id, EmployeeDto employeeDto);
 
     /**
      * Soft deletes an employee by setting them as inactive.
@@ -51,17 +52,17 @@ public interface EmployeeService {
      * Adds a sport to an employee's list of sports.
      *
      * @param employeeId the ID of the employee
-     * @param sport the sport entity to be added
+     * @param sportId the sport entity to be added
      * @return the updated employee entity
      */
-    Employee addSportToEmployee(int employeeId, Sport sport);
+    EmployeeDto addSportToEmployee(int employeeId, int sportId);
 
     /**
      * Removes a sport from an employee's list of sports.
      *
      * @param employeeId the ID of the employee
-     * @param sport the sport entity to be removed
+     * @param sportId the sport entity to be removed
      * @return the updated employee entity
      */
-    Employee removeSportFromEmployee(int employeeId, Sport sport);
+    EmployeeDto removeSportFromEmployee(int employeeId, int sportId);
 }

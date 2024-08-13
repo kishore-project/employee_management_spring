@@ -2,12 +2,7 @@ package com.ideas2it.employeemanagement.employee.controller;
 
 import com.ideas2it.employeemanagement.department.service.DepartmentService;
 import com.ideas2it.employeemanagement.employee.dto.EmployeeDto;
-import com.ideas2it.employeemanagement.employee.mapper.EmployeeMapper;
 import com.ideas2it.employeemanagement.employee.service.EmployeeService;
-import com.ideas2it.employeemanagement.model.Address;
-import com.ideas2it.employeemanagement.model.Department;
-import com.ideas2it.employeemanagement.model.Employee;
-import com.ideas2it.employeemanagement.model.Sport;
 import com.ideas2it.employeemanagement.sport.service.SportService;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
@@ -17,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,24 +39,15 @@ public class EmployeeController {
      * @param employeeDto {@link EmployeeDto} The DTO containing employee data.
      * @return The created employee DTO with HTTP status 201 Created.
      */
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<EmployeeDto> addEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
         logger.info("Request to create employee with details: {}", employeeDto);
         try {
-            Department department = departmentService.getDepartmentById(employeeDto.getDepartmentID());
-            Address address = new Address(employeeDto.getStreet(), employeeDto.getCity(), employeeDto.getState(), employeeDto.getZip());
-
-            Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
-            employee.setDepartment(department);
-            employee.setAddress(address);
-
-            Employee createdEmployee = employeeService.addEmployee(employee);
-            EmployeeDto createdEmployeeDto = EmployeeMapper.mapToEmployeeDto(createdEmployee);
-
-            logger.info("Employee created with ID: {}", createdEmployee.getId());
+            EmployeeDto createdEmployeeDto = employeeService.addEmployee(employeeDto);
+            logger.info("Employee created with ID: {}", createdEmployeeDto.getId());
             return new ResponseEntity<>(createdEmployeeDto, HttpStatus.CREATED);
         } catch (Exception e) {
-            logger.error("Error creating employee", e);
+            logger.error("Error creating employee {}", employeeDto.getName(), e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -76,13 +61,7 @@ public class EmployeeController {
     public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
         logger.info("Request to retrieve all employees");
         try {
-            List<Employee> employees = employeeService.getAllEmployees();
-            List<EmployeeDto> employeeDtos = new ArrayList<>();
-            for (Employee employee : employees) {
-                EmployeeDto employeeDto = EmployeeMapper.mapToEmployeeDto(employee);
-                employeeDtos.add(employeeDto);
-            }
-
+            List<EmployeeDto> employeeDtos = employeeService.getAllEmployees();
             logger.info("Retrieved {} employees", employeeDtos.size());
             return new ResponseEntity<>(employeeDtos, HttpStatus.OK);
         } catch (Exception e) {
@@ -101,9 +80,7 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDto> getEmployeeById(@Valid @PathVariable int id) {
         logger.info("Request to retrieve employee with ID: {}", id);
         try {
-            Employee employee = employeeService.getEmployeeById(id);
-            EmployeeDto employeeDto = EmployeeMapper.mapToEmployeeDto(employee);
-
+            EmployeeDto employeeDto = employeeService.getEmployeeById(id);
             logger.info("Retrieved employee with ID: {}", id);
             return new ResponseEntity<>(employeeDto, HttpStatus.OK);
         } catch (Exception e) {
@@ -123,17 +100,7 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDto> updateEmployee(@Valid @PathVariable int id, @RequestBody EmployeeDto employeeDto) {
         logger.info("Request to update employee with ID: {}", id);
         try {
-            Employee employee = EmployeeMapper.mapToEmployee(employeeDto);
-            Department department = departmentService.getDepartmentById(employeeDto.getDepartmentID());
-            Address address = new Address(employeeDto.getStreet(), employeeDto.getCity(), employeeDto.getState(), employeeDto.getZip());
-
-            employee.setId(id);
-            employee.setDepartment(department);
-            employee.setAddress(address);
-
-            Employee updatedEmployee = employeeService.updateEmployee(employee);
-            EmployeeDto updatedEmployeeDto = EmployeeMapper.mapToEmployeeDto(updatedEmployee);
-
+            EmployeeDto updatedEmployeeDto = employeeService.updateEmployee(id, employeeDto);
             logger.info("Updated employee with ID: {}", id);
             return new ResponseEntity<>(updatedEmployeeDto, HttpStatus.OK);
         } catch (Exception e) {
@@ -172,10 +139,7 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDto> addSportToEmployee(@PathVariable int employeeId, @PathVariable int sportId) {
         logger.info("Request to add sport with ID: {} to employee with ID: {}", sportId, employeeId);
         try {
-            Sport sport = sportService.getSportById(sportId);
-            Employee updatedEmployee = employeeService.addSportToEmployee(employeeId, sport);
-            EmployeeDto updatedEmployeeDto = EmployeeMapper.mapToEmployeeDto(updatedEmployee);
-
+            EmployeeDto updatedEmployeeDto = employeeService.addSportToEmployee(employeeId, sportId);
             logger.info("Added sport with ID: {} to employee with ID: {}", sportId, employeeId);
             return new ResponseEntity<>(updatedEmployeeDto, HttpStatus.OK);
         } catch (Exception e) {
@@ -195,10 +159,7 @@ public class EmployeeController {
     public ResponseEntity<EmployeeDto> removeSportFromEmployee(@PathVariable int employeeId, @PathVariable int sportId) {
         logger.info("Request to remove sport with ID: {} from employee with ID: {}", sportId, employeeId);
         try {
-            Sport sport = sportService.getSportById(sportId);
-            Employee updatedEmployee = employeeService.removeSportFromEmployee(employeeId, sport);
-            EmployeeDto updatedEmployeeDto = EmployeeMapper.mapToEmployeeDto(updatedEmployee);
-
+            EmployeeDto updatedEmployeeDto = employeeService.removeSportFromEmployee(employeeId, sportId);
             logger.info("Removed sport with ID: {} from employee with ID: {}", sportId, employeeId);
             return new ResponseEntity<>(updatedEmployeeDto, HttpStatus.OK);
         } catch (Exception e) {
