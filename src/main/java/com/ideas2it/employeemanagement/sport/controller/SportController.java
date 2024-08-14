@@ -1,11 +1,9 @@
 package com.ideas2it.employeemanagement.sport.controller;
 
+import java.util.List;
+
 import com.ideas2it.employeemanagement.employee.dto.EmployeeDto;
-import com.ideas2it.employeemanagement.employee.mapper.EmployeeMapper;
-import com.ideas2it.employeemanagement.model.Employee;
-import com.ideas2it.employeemanagement.model.Sport;
 import com.ideas2it.employeemanagement.sport.dto.SportDto;
-import com.ideas2it.employeemanagement.sport.mapper.SportMapper;
 import com.ideas2it.employeemanagement.sport.service.SportService;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
@@ -14,9 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * REST controller for managing Sport entities.
@@ -40,14 +35,9 @@ public class SportController {
     @PostMapping
     public ResponseEntity<SportDto> createSport(@Valid @RequestBody SportDto sportDto) {
         logger.info("Request to create sport with name: {}", sportDto.getName());
-        try {
             SportDto createdSportDto = sportService.addSport(sportDto);
             logger.info("Sport created with ID: {}", createdSportDto.getId());
             return new ResponseEntity<>(createdSportDto, HttpStatus.CREATED);
-        } catch (Exception e) {
-            logger.error("Error creating sport", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     /**
@@ -59,14 +49,9 @@ public class SportController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteSport(@PathVariable int id) {
         logger.info("Request to delete sport with ID: {}", id);
-        try {
             sportService.deleteSport(id);
             logger.info("Sport with ID {} deleted successfully", id);
             return new ResponseEntity<>(HttpStatus.FOUND);
-        } catch (Exception e) {
-            logger.error("Error deleting sport with ID: {}", id, e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     /**
@@ -77,14 +62,9 @@ public class SportController {
     @GetMapping("/list")
     public ResponseEntity<List<SportDto>> getAllSports() {
         logger.info("Retrieving list of all sports");
-        try {
             List<SportDto> sportDtos = sportService.getAllSports();
             logger.info("Retrieved {} sports", sportDtos.size());
             return new ResponseEntity<>(sportDtos, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("Error retrieving list of sports", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     /**
@@ -96,14 +76,9 @@ public class SportController {
     @GetMapping("/{id}")
     public ResponseEntity<SportDto> getSportById(@PathVariable int id) {
         logger.info("Request to retrieve sport with ID: {}", id);
-        try {
             SportDto sportDto = sportService.getSportById(id);
             logger.info("Retrieved sport with ID: {}", id);
             return new ResponseEntity<>(sportDto, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("Error retrieving sport with ID: {}", id, e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     /**
@@ -116,14 +91,9 @@ public class SportController {
     @PutMapping("/update/{id}")
     public ResponseEntity<SportDto> updateSport(@Valid @PathVariable int id, @RequestBody SportDto sportDto) {
         logger.info("Request to update sport with ID: {}", id);
-        try {
             SportDto updatedSportDto = sportService.updateSport(id, sportDto);
             logger.info("Updated sport with ID: {}", id);
             return new ResponseEntity<>(updatedSportDto, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("Error updating sport with ID: {}", id, e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     /**
@@ -135,13 +105,8 @@ public class SportController {
     @GetMapping("/{sportId}/employees")
     public ResponseEntity<List<EmployeeDto>> getEmployeesBySportId(@PathVariable int sportId) {
         logger.info("Request to retrieve employees for sport with ID: {}", sportId);
-        try {
             List<EmployeeDto> employeeDtos = sportService.getEmployeesBySportId(sportId);
             logger.info("Retrieved {} employees for sport with ID: {}", employeeDtos.size(), sportId);
             return new ResponseEntity<>(employeeDtos, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("Error retrieving employees for sport with ID: {}", sportId, e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 }

@@ -1,14 +1,17 @@
 package com.ideas2it.employeemanagement.sport.service;
 
-import com.ideas2it.employeemanagement.department.dto.DepartmentDto;
 import com.ideas2it.employeemanagement.employee.dto.EmployeeDto;
-import com.ideas2it.employeemanagement.model.Employee;
-import com.ideas2it.employeemanagement.model.Sport;
 import com.ideas2it.employeemanagement.sport.dto.SportDto;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ *<p>
+ * Interface for SportService  to handle  sport-related operation.
+ *</p>
+ * @author  Kishore
+ */
 @Component
 public interface SportService {
 

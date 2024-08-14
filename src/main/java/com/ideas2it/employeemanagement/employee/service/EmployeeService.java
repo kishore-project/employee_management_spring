@@ -1,12 +1,16 @@
 package com.ideas2it.employeemanagement.employee.service;
 
-import com.ideas2it.employeemanagement.employee.dto.EmployeeDto;
-import com.ideas2it.employeemanagement.model.Employee;
-import com.ideas2it.employeemanagement.model.Sport;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 
+import com.ideas2it.employeemanagement.employee.dto.EmployeeDto;
+import org.springframework.stereotype.Component;
+/**
+ *<p>
+ * Interface for EmployeeService  to handle  employee-related operation.
+ *</p>
+ * @author  Kishore
+ *
+ */
 @Component
 public interface EmployeeService {
 

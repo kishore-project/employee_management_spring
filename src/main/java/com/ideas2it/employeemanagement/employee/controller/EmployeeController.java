@@ -42,14 +42,9 @@ public class EmployeeController {
     @PostMapping
     public ResponseEntity<EmployeeDto> addEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
         logger.info("Request to create employee with details: {}", employeeDto);
-        try {
             EmployeeDto createdEmployeeDto = employeeService.addEmployee(employeeDto);
             logger.info("Employee created with ID: {}", createdEmployeeDto.getId());
             return new ResponseEntity<>(createdEmployeeDto, HttpStatus.CREATED);
-        } catch (Exception e) {
-            logger.error("Error creating employee {}", employeeDto.getName(), e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     /**
@@ -60,14 +55,9 @@ public class EmployeeController {
     @GetMapping("/list")
     public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
         logger.info("Request to retrieve all employees");
-        try {
             List<EmployeeDto> employeeDtos = employeeService.getAllEmployees();
             logger.info("Retrieved {} employees", employeeDtos.size());
             return new ResponseEntity<>(employeeDtos, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("Error retrieving employees", e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     /**
@@ -79,14 +69,9 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeDto> getEmployeeById(@Valid @PathVariable int id) {
         logger.info("Request to retrieve employee with ID: {}", id);
-        try {
             EmployeeDto employeeDto = employeeService.getEmployeeById(id);
             logger.info("Retrieved employee with ID: {}", id);
             return new ResponseEntity<>(employeeDto, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("Error retrieving employee with ID: {}", id, e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     /**
@@ -99,14 +84,9 @@ public class EmployeeController {
     @PutMapping("/update/{id}")
     public ResponseEntity<EmployeeDto> updateEmployee(@Valid @PathVariable int id, @RequestBody EmployeeDto employeeDto) {
         logger.info("Request to update employee with ID: {}", id);
-        try {
             EmployeeDto updatedEmployeeDto = employeeService.updateEmployee(id, employeeDto);
             logger.info("Updated employee with ID: {}", id);
             return new ResponseEntity<>(updatedEmployeeDto, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("Error updating employee with ID: {}", id, e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     /**
@@ -118,14 +98,9 @@ public class EmployeeController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable int id) {
         logger.info("Request to delete employee with ID: {}", id);
-        try {
             employeeService.deleteEmployee(id);
             logger.info("Employee with ID {} deleted successfully", id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            logger.error("Error deleting employee with ID: {}", id, e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     /**
@@ -138,14 +113,9 @@ public class EmployeeController {
     @PutMapping("/{employeeId}/addSport/{sportId}")
     public ResponseEntity<EmployeeDto> addSportToEmployee(@PathVariable int employeeId, @PathVariable int sportId) {
         logger.info("Request to add sport with ID: {} to employee with ID: {}", sportId, employeeId);
-        try {
             EmployeeDto updatedEmployeeDto = employeeService.addSportToEmployee(employeeId, sportId);
             logger.info("Added sport with ID: {} to employee with ID: {}", sportId, employeeId);
             return new ResponseEntity<>(updatedEmployeeDto, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("Error adding sport with ID: {} to employee with ID: {}", sportId, employeeId, e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
     /**
@@ -158,13 +128,8 @@ public class EmployeeController {
     @PutMapping("/{employeeId}/removeSport/{sportId}")
     public ResponseEntity<EmployeeDto> removeSportFromEmployee(@PathVariable int employeeId, @PathVariable int sportId) {
         logger.info("Request to remove sport with ID: {} from employee with ID: {}", sportId, employeeId);
-        try {
             EmployeeDto updatedEmployeeDto = employeeService.removeSportFromEmployee(employeeId, sportId);
             logger.info("Removed sport with ID: {} from employee with ID: {}", sportId, employeeId);
             return new ResponseEntity<>(updatedEmployeeDto, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.error("Error removing sport with ID: {} from employee with ID: {}", sportId, employeeId, e);
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 }

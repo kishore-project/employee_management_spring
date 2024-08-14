@@ -1,14 +1,17 @@
 package com.ideas2it.employeemanagement.department.service;
 
-import com.ideas2it.employeemanagement.department.dto.DepartmentDto;
-import com.ideas2it.employeemanagement.employee.dto.EmployeeDto;
-import com.ideas2it.employeemanagement.model.Department;
-import com.ideas2it.employeemanagement.model.Employee;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 
+import com.ideas2it.employeemanagement.department.dto.DepartmentDto;
+import com.ideas2it.employeemanagement.employee.dto.EmployeeDto;
+import org.springframework.stereotype.Component;;
+
+/**
+ *<p>
+ * Interface for DepartmentService  to handle  department-related operation.
+ *</p>
+ * @author  Kishore
+ */
 @Component
 public interface DepartmentService {
 

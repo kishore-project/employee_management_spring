@@ -30,6 +30,7 @@ public class EmployeeDto {
 
     @NotBlank(message = "Name is Required")
     @Size(min=2, max=30, message = "Name should not exceed 30 characters")
+    @Pattern(regexp = "^[a-zA-Z]+([ ][a-zA-Z]+)*$", message = "Name should be alphabets" )
     private String name;
 
     @NotNull(message = "Date Of Birth Is Required")
@@ -39,7 +40,7 @@ public class EmployeeDto {
     private int age;
 
     @NotBlank(message = "Email ID is Required")
-    @Email
+    @Email(regexp = "\\\\b[A-za-z0-9._%-]\"\n\"+@[A-Za-z0-9.-]+\\\\.[A-Za-z]{2,4}\\\\b")
     private String emailId;
 
     @NotNull(message = "Department ID is Required")
